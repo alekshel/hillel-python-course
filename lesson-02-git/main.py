@@ -1,5 +1,6 @@
 from urllib.parse import urlparse, parse_qs
 import re
+from http.cookies import SimpleCookie
 
 PHONE_RGX = re.compile(r"(?:\+\d{2})?\d{3,4}\D?\d{3}\D?\d{3}")
 
@@ -61,3 +62,30 @@ if __name__ == '__main__':
         'phone': '380501111100',
         'phone-type': 1
     }
+
+
+def parse_cookie(query: str) -> dict:
+    cookie = SimpleCookie(query)
+    cookie.load(query)
+
+    output = {}
+    for key, chunk in cookie.items():
+        output[key] = check_value(chunk.value)
+    return output
+
+
+if __name__ == '__main__':
+    assert parse_cookie('name=Dima;') == {'name': 'Dima'}
+    assert parse_cookie('') == {}
+    assert parse_cookie('name=Dima;age=28;') == {'name': 'Dima', 'age': 28}
+    assert parse_cookie('name=Dima=User;age=28;') == {'name': 'Dima=User', 'age': 28}
+
+    assert parse_cookie('user-name=Alex=admin;root=true;age=25') == {
+        'user-name': 'Alex=admin',
+        'root': True,
+        'age': 25
+    }
+    assert parse_cookie('phone=380501111100;;;') == {'phone': '380501111100'}
+    assert parse_cookie('user=;;;') == {'user': ''}
+    assert parse_cookie('user;;;') == {}
+    assert parse_cookie('user=Alex=admin,root;') == {'user': 'Alex=admin,root'}
