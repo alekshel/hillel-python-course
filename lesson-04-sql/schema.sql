@@ -1,0 +1,14 @@
+DROP TABLE IF EXISTS customers;
+DROP TABLE IF EXISTS tracks;
+
+CREATE TABLE customers (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    first_name TEXT NOT NULL,
+    last_name TEXT NOT NULL
+);
+
+CREATE TABLE tracks (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    duration INTEGER NOT NULL
+);
