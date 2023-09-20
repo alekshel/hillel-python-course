@@ -1,6 +1,7 @@
-import sqlite3
-from faker import Faker
 import random
+import sqlite3
+
+from faker import Faker
 
 connection = sqlite3.connect('database.db')
 
